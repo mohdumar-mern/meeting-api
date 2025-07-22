@@ -1,12 +1,16 @@
+import express from 'express';
+import {
+  adminLogin,
+  adminLogout,
+  adminRegister
+} from '../controllers/authController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
-import express from 'express'
-import { adminLogin, adminLogout, adminRegister } from '../controllers/authController.js'
-import { protect } from '../middleware/authMiddleware.js'
-const router = express.Router()
+const router = express.Router();
 
-router.get('/logout', protect, adminLogout)
-router.post('/register', adminRegister)
-router.post('/login', adminLogin)
+// Auth Routes
+router.post('/register', adminRegister);  // Admin Registration (Public)
+router.post('/login', adminLogin);        // Admin Login (Public)
+router.post('/logout', protect, adminLogout); // Secure Logout (Private)
 
-export default router
-
+export default router;

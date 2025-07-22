@@ -1,20 +1,24 @@
 // meetingSchedulerServer/routes/meeting.routes.js
 
 import express from 'express'
-// import {
-//   createMeeting,
-//   getAllMeetings,
-//   updateMeeting,
-// } from '../controllers/meeting.controller.js'
-import { createMeeting, getAllMeetings } from '../controllers/meetingController.js'
-import { updateMeeting } from '../controllers/meetingController.js'
-// import { verifyAdmin } from '../middlewares/auth.middleware.js'
+import {
+  createMeeting,
+  getAllMeetings,
+  updateMeeting,
+} from '../controllers/meetingController.js'
+
+// Uncomment if you want to protect routes in the future
 import { protect } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
+// Create a new meeting
 router.post('/', createMeeting)
-router.get('/',  getAllMeetings)
-router.patch('/:id', updateMeeting)
+
+// Get all meetings
+router.get('/', protect, getAllMeetings)
+
+// Update a meeting and send SMS
+router.patch('/:id', protect, updateMeeting)
 
 export default router
