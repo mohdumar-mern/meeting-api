@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
 
-const adminSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -17,10 +16,15 @@ const adminSchema = new mongoose.Schema(
       minlength: [6, 'Password must be at least 6 characters'],
       select: false,
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+   
   },
   { timestamps: true }
 );
 
 
 
-export default mongoose.model('Admin', adminSchema);
+export default mongoose.model('User', userSchema);
