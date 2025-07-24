@@ -60,6 +60,8 @@ export const getAllMeetings = expressAsyncHandler(async (req, res) => {
 // ✅ Update Meeting and Notify via SMS (Twilio)
 export const updateMeeting = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
+    console.log(req.body)
+
 
   if (!id) {
     return res.status(400).json({ message: 'Meeting ID is required' });
@@ -74,32 +76,30 @@ export const updateMeeting = expressAsyncHandler(async (req, res) => {
     if (!updatedMeeting) {
       return res.status(404).json({ message: 'Meeting not found' });
     }
+    const { fullName } = updatedMeeting;
 
-    const { fullName, mobileNumber, arrivalDate, arrivalTime } = updatedMeeting;
+    // // Twilio Setup
+    // const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    // const authToken = process.env.TWILIO_AUTH_TOKEN;
+    // const twilioPhone = process.env.TWILIO_PHONE_NUMBER;
 
-    // Twilio Setup
-    const accountSid = process.env.TWILIO_ACCOUNT_SID;
-    const authToken = process.env.TWILIO_AUTH_TOKEN;
-    const twilioPhone = process.env.TWILIO_PHONE_NUMBER;
+    // if (!accountSid || !authToken || !twilioPhone) {
+    //   return res.status(500).json({ message: 'Twilio credentials are not set in .env' });
+    // }
 
-    if (!accountSid || !authToken || !twilioPhone) {
-      return res.status(500).json({ message: 'Twilio credentials are not set in .env' });
-    }
+    // const client = twilio(accountSid, authToken);
 
-    const client = twilio(accountSid, authToken);
+    // const location = 'Noida sec200, Sector 63, Noida, Uttar Pradesh, India 201301';
+    // const smsMessage = `Hi ${fullName},\n\nYour meeting has been updated:\n📍 Location: ${location}\n📅 Date: ${arrivalDate}\n⏰ Time: ${arrivalTime}\n🔗 Google Meet: https://meet.google.com/\n\nRegards,\nJan Suraaj`;
 
-    const location = 'Noida sec200, Sector 63, Noida, Uttar Pradesh, India 201301';
-    const smsMessage = `Hi ${fullName},\n\nYour meeting has been updated:\n📍 Location: ${location}\n📅 Date: ${arrivalDate}\n⏰ Time: ${arrivalTime}\n🔗 Google Meet: https://meet.google.com/\n\nRegards,\nJan Suraaj`;
-
-    const result = await client.messages.create({
-      body: smsMessage,
-      from: twilioPhone,
-      to: `+91${mobileNumber}`,
-    });
+    // const result = await client.messages.create({
+    //   body: smsMessage,
+    //   from: twilioPhone,
+    //   to: `+91${mobileNumber}`,
+    // });
 
     res.status(200).json({
-      message: `Meeting updated and SMS sent successfully to ${fullName}`,
-      twilioSid: result.sid,
+      message: `Meeting updated a successfully to ${fullName}`,
       updatedMeeting,
     });
   } catch (error) {
