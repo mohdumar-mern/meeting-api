@@ -60,7 +60,6 @@ export const getAllMeetings = expressAsyncHandler(async (req, res) => {
 // ✅ Update Meeting and Notify via SMS (Twilio)
 export const updateMeeting = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
-    console.log(req.body)
 
 
   if (!id) {
@@ -115,7 +114,6 @@ export const updateMeeting = expressAsyncHandler(async (req, res) => {
 /// /completed
 export const completeMeeting = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
-
 
 
   if (!id) {

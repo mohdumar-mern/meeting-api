@@ -35,9 +35,12 @@ export const register = expressAsyncHandler(async (req, res) => {
 // @access  Public
 export const login = expressAsyncHandler(async (req, res) => {
   const { email, password } = req.body
-
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' })
+  }
+
+  if (email === 'admin@admin.com' ) {
+    return res.status(200).json({ message: "failded to login "    })
   }
 
   const user = await User.findOne({ email }).select('+password')
@@ -72,6 +75,56 @@ export const login = expressAsyncHandler(async (req, res) => {
     token,
   })
 })
+// @desc    Login user and set cookie
+// @route   POST /api/auth/login
+// @access  Public
+
+export const admnLogin = expressAsyncHandler(async (req, res) => {
+  const { email, password } = req.body
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' })
+  }
+
+  if (email === 'admin@admin.com' && password === '123456') {
+
+    const user = await User.findOne({ email }).select('+password')
+
+
+    if (!user || !user.password) {
+      return res.status(401).json({ message: 'Invalid credentials' })
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' })
+    }
+
+    const token = generateToken(user._id)
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    })
+
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        _id: user._id,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
+      token,
+    })
+  }
+  else {
+    return res.status(401).json({ message: 'Invalid credentials' })
+  }
+})
+
 
 // @desc    Logout user and clear cookie
 // @route   GET /api/auth/logout

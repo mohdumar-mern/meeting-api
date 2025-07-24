@@ -88,6 +88,9 @@ const meetingSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    message: {
+      type: String,
+    },
 
     politicalAffiliation: {
       type: Boolean,
