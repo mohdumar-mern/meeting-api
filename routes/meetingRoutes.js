@@ -4,6 +4,7 @@ import express from 'express'
 import {
   completeMeeting,
   createMeeting,
+  deleteMeeting,
   getAllMeetings,
   updateMeeting,
 } from '../controllers/meetingController.js'
@@ -22,5 +23,6 @@ router.get('/', protect,adminOnly, getAllMeetings)
 // Update a meeting and send SMS
 router.patch('/:id', protect,adminOnly, updateMeeting)
 router.patch('/:id/complete', protect,adminOnly, completeMeeting)
+router.delete('/:id/delete', protect,adminOnly, deleteMeeting)
 
 export default router

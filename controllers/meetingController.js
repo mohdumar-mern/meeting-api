@@ -143,3 +143,33 @@ export const completeMeeting = expressAsyncHandler(async (req, res) => {
     });
   }
 });
+
+
+// delete meeting
+export const deleteMeeting = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: 'Meeting ID is required' });
+  }
+
+  try {
+    const deletedMeeting = await Meeting.findByIdAndDelete(id);
+
+    if (!deletedMeeting) {
+      return res.status(404).json({ message: 'Meeting not found' });
+    }
+
+    // ✅ Send success response
+    return res.status(200).json({
+      message: 'Meeting deleted successfully',
+      data: deletedMeeting,
+    });
+  } catch (error) {
+    console.error('Delete Meeting Error:', error);
+    return res.status(500).json({
+      message: 'Failed to delete meeting',
+      error: error.message,
+    });
+  }
+});
